@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/zihuyishi/joker/web/code"
 	"github.com/zihuyishi/joker/web/model"
@@ -19,10 +20,16 @@ func (r *Router) jokerById(c *gin.Context) {
 		r.codeResponse(c, code.WrongParams)
 		return
 	}
-	joker, err := r.ctx.Dao.FindById(id)
+	joker, err := r.ctx.Dao.FindJokerById(id)
 	if err != nil {
 		r.codeResponse(c, code.DBError)
 		return
+	}
+	tags, err := r.ctx.Dao.FindJokerTags(joker.Id)
+	if err == nil {
+		joker.Tags = tags
+	} else {
+		fmt.Printf("get tags fail %s\n", err.Error())
 	}
 	c.JSON(http.StatusOK, joker)
 }

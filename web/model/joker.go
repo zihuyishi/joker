@@ -8,4 +8,5 @@ type Joker struct {
 	Title string `json:"title" sql:"title"`
 	Content string `json:"content" sql:"content"`
 	Time time.Time `json:"time" sql:"time"`
+	Tags *[]Tag `json:"tag" sql:"-"`
 }
