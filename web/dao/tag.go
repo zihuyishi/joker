@@ -10,6 +10,33 @@ func (dao *Dao) InsertTag(tag *model.Tag) error {
 	return err
 }
 
+func (dao *Dao) GetOrInsertTag(name string) (*model.Tag, error) {
+	tag := &model.Tag{
+		Name: name,
+	}
+	err := dao.db.Select(tag)
+	if err != nil {
+		err = dao.db.Insert(tag)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return tag, err
+}
+
+func (dao *Dao) AddNameTagToJoker(name string, jokerId int64) error {
+	tag, err := dao.GetOrInsertTag(name)
+	if err != nil {
+		return err
+	}
+	jokerTag := &model.JokerTag{
+		JokerId: jokerId,
+		TagId: tag.Id,
+	}
+	err = dao.db.Insert(jokerTag)
+	return err
+}
+
 func (dao *Dao) FindTagById(id int64) (*model.Tag, error) {
 	tag := &model.Tag{
 		Id: id,
@@ -33,6 +60,9 @@ func (dao *Dao) FindJokerTags(jokerId int64) (*[]model.Tag, error) {
 	tagIds := make([]int64, len(jokerTags))
 	for i := 0; i < len(jokerTags); i++  {
 		tagIds[i] = jokerTags[i].Id
+	}
+	if len(tagIds) == 0 {
+		return nil, nil
 	}
 	var tags []model.Tag
 	err = dao.db.Model(&tags).Where("id IN (?)", pg.In(tagIds)).Select()

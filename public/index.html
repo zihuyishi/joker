@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Joker</title>
+    <link rel="stylesheet" href="/public/css/bootstrap.min.css" >
+</head>
+<body>
+    <script>
+        function  onClick() {
+            fetch('/random').then(res => res.json()).then(res => {
+                const jokers = res.data;
+                const joker = jokers[0];
+                document.getElementById('joker').innerText = joker.content;
+            })
+        }
+    </script>
+    <p id="joker"></p>
+    <button onclick="onClick()">随机获取</button>
+
+</body>
+</html>

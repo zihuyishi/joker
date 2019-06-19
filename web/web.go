@@ -29,6 +29,7 @@ func (web *Web) Serve() {
 	}
 	d := dao.New(pgConfig)
 	g := gin.Default()
+	g.Static("/public", "./public")
 	ctx := utils.Context{
 		Dao: d,
 		G:   g,

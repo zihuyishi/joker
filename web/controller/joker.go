@@ -5,13 +5,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/zihuyishi/joker/web/code"
 	"github.com/zihuyishi/joker/web/model"
-	"net/http"
 	"strconv"
 )
 
-type CodeResult struct {
-	code int
-}
+
 
 func (r *Router) jokerById(c *gin.Context) {
 	strId := c.Param("id")
@@ -31,7 +28,7 @@ func (r *Router) jokerById(c *gin.Context) {
 	} else {
 		fmt.Printf("get tags fail %s\n", err.Error())
 	}
-	c.JSON(http.StatusOK, joker)
+	r.jsonResponse(c, joker)
 }
 
 func (r *Router) newJoker(c *gin.Context) {
@@ -48,14 +45,23 @@ func (r *Router) newJoker(c *gin.Context) {
 	err := r.ctx.Dao.InsertJoker(joker)
 	if err != nil {
 		r.codeResponse(c, code.DBError)
+		return
 	}
-	c.JSON(http.StatusOK, joker)
+	r.jsonResponse(c, joker)
 }
 
-func (r *Router) codeResponse(c *gin.Context, code int) {
-	res := &CodeResult{
-		code,
+func (r *Router) randomJoker(c *gin.Context) {
+	strCount := c.DefaultQuery("count", "5")
+	count, err := strconv.Atoi(strCount)
+	if err != nil {
+		r.codeResponse(c, code.WrongParams)
+		return
 	}
-	c.JSON(http.StatusOK, res)
+	jokers, err := r.ctx.Dao.RandomJoker(count)
+	if err != nil {
+		fmt.Printf("random joker fail: %s", err.Error())
+		r.codeResponse(c, code.DBError)
+		return
+	}
+	r.jsonResponse(c, jokers)
 }
-
