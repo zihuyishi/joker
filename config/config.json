@@ -1,0 +1,6 @@
+{
+  "DBPass": "mysecretpassword",
+  "DBUser": "postgres",
+  "DBName": "joker",
+  "Addr": ":7001"
+}
