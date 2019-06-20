@@ -2,13 +2,12 @@ package controller
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/zihuyishi/joker/web/code"
 	"github.com/zihuyishi/joker/web/model"
-	"strconv"
 )
-
-
 
 func (r *Router) jokerById(c *gin.Context) {
 	strId := c.Param("id")
@@ -39,7 +38,7 @@ func (r *Router) newJoker(c *gin.Context) {
 		return
 	}
 	joker := &model.Joker{
-		Title: title,
+		Title:   title,
 		Content: content,
 	}
 	err := r.ctx.Dao.InsertJoker(joker)
@@ -64,4 +63,20 @@ func (r *Router) randomJoker(c *gin.Context) {
 		return
 	}
 	r.jsonResponse(c, jokers)
+}
+
+func (r *Router) batchNewJoker(c *gin.Context) {
+	contents := c.PostFormArray("contents")
+	for i := 0; i < len(contents); i++ {
+		joker := &model.Joker{
+			Title: "none",
+			Content: contents[i],
+		}
+		err := r.ctx.Dao.InsertJoker(joker)
+		if err != nil {
+			r.codeResponse(c, code.DBError)
+			return
+		}
+	}
+	r.codeResponse(c, code.Ok)
 }

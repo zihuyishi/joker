@@ -10,6 +10,7 @@ func main() {
 		DBPass: "mysecretpassword",
 		DBUser: "postgres",
 		DBName: "joker",
+		DBAddr: "some-postgres:5432",
 		Addr: ":7001",
 
 	}
