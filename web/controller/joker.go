@@ -31,17 +31,13 @@ func (r *Router) jokerById(c *gin.Context) {
 }
 
 func (r *Router) newJoker(c *gin.Context) {
-	title := c.PostForm("title")
-	content := c.PostForm("content")
-	if len(title) == 0 || len(content) == 0 {
+	var joker model.Joker
+	err := c.ShouldBind(&joker)
+	if err != nil {
 		r.codeResponse(c, code.WrongParams)
 		return
 	}
-	joker := &model.Joker{
-		Title:   title,
-		Content: content,
-	}
-	err := r.ctx.Dao.InsertJoker(joker)
+	err = r.ctx.Dao.InsertJoker(&joker)
 	if err != nil {
 		r.codeResponse(c, code.DBError)
 		return
@@ -65,6 +61,7 @@ func (r *Router) randomJoker(c *gin.Context) {
 	r.jsonResponse(c, jokers)
 }
 
+
 func (r *Router) batchNewJoker(c *gin.Context) {
 	contents := c.PostFormArray("contents")
 	for i := 0; i < len(contents); i++ {
@@ -80,3 +77,5 @@ func (r *Router) batchNewJoker(c *gin.Context) {
 	}
 	r.codeResponse(c, code.Ok)
 }
+
+

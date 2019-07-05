@@ -2,9 +2,9 @@ package main
 
 import (
 	"fmt"
-	"os"
 	"github.com/zihuyishi/joker/web"
 	"github.com/zihuyishi/joker/web/utils"
+	"os"
 )
 
 func main() {

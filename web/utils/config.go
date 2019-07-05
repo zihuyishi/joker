@@ -10,7 +10,7 @@ type Config struct {
 	DBUser string
 	DBPass string
 	DBName string
-	Addr string
+	Addr string `default:"7001"`
 }
 
 func LoadConfigFromFile(path string) (*Config, error) {

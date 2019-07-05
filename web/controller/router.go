@@ -33,6 +33,15 @@ func (r *Router) LoadRoutes() {
 		g.PUT("/tag", r.newTag)
 		g.POST("/tag/tojoker", r.addTagToJoker)
 	}
+
+	// user
+	{
+		g.POST("/login", r.login)
+		g.POST("/logout", r.logout)
+		g.GET("/user/:id", r.userById)
+		g.GET("/user", r.currentUser)
+		g.POST("/user/password", r.changePassword)
+	}
 }
 
 func (r *Router) codeResponse(c *gin.Context, code int) {
